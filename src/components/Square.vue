@@ -12,9 +12,18 @@
 
 <script lang="ts">
 import Vue from "vue"
+import { vec2 } from "gl-matrix"
 
 const threshold = 50
 const maxDuration = 300
+const speed = 750
+
+export type SwipeEvent = {
+  time: number
+  startTime: number
+  momentum: vec2
+  direction: string
+}
 
 export default Vue.extend({
   name: "square",
@@ -26,15 +35,12 @@ export default Vue.extend({
   data() {
     return {
       time: this.startTime,
-      x: 0,
-      y: 0,
-      velocity: 1000,
+      pos: vec2.create(),
+      momentum: vec2.create(),
       isSwiped: false,
-      isDestroyed: false,
       startSwipe: {
         time: 0,
-        x: 0,
-        y: 0,
+        pos: vec2.create(),
       },
     }
   },
@@ -42,8 +48,8 @@ export default Vue.extend({
     hitboxStyle(): object {
       return {
         transform: "translate(-50%, -50%)",
-        top: `calc(50% + ${this.y}px)`,
-        left: `calc(50% + ${this.x}px)`,
+        left: `calc(50% + ${this.pos[0]}px)`,
+        top: `calc(50% + ${this.pos[1]}px)`,
       }
     },
     squareStyle(): object {
@@ -57,7 +63,7 @@ export default Vue.extend({
       return this.startSwipe.time !== 0
     },
     isOutOfView(): boolean {
-      return Math.abs(this.x) > 1000 || Math.abs(this.y) > 1000
+      return vec2.length(this.pos) > 1000
     },
   },
   methods: {
@@ -65,100 +71,87 @@ export default Vue.extend({
       if (this.isSwiped) return
       const touch = e.changedTouches[0]
       this.startSwipe.time = Date.now()
-      this.startSwipe.x = touch.clientX
-      this.startSwipe.y = touch.clientY
+      this.startSwipe.pos = vec2.set(
+        this.startSwipe.pos,
+        touch.clientX,
+        touch.clientY
+      )
     },
     touchend(e: TouchEvent) {
       if (this.isSwiped) return
       const touch = e.changedTouches[0]
       const deltaTime = Date.now() - this.startSwipe.time
-      const deltaX = touch.clientX - this.startSwipe.x
-      const deltaY = touch.clientY - this.startSwipe.y
-      const absX = Math.abs(deltaX)
-      const absY = Math.abs(deltaY)
+      const delta = vec2.sub(
+        vec2.create(),
+        [touch.clientX, touch.clientY],
+        this.startSwipe.pos
+      )
+      const absX = Math.abs(delta[0])
+      const absY = Math.abs(delta[1])
 
       // reset start data and exit early
       // if the touch was too long
-      this.startSwipe = { time: 0, x: 0, y: 0 }
+      this.startSwipe = { time: 0, pos: vec2.create() }
       if (deltaTime > maxDuration) return
 
       // figure out which direction we swiped
       let direction = ""
-      let velocity = 0
       if (absX > threshold && absX > absY) {
-        direction = deltaX > 0 ? "right" : "left"
-        velocity = absX / (deltaTime / 1000)
+        direction = delta[0] > 0 ? "right" : "left"
       } else if (absY > threshold && absX < absY) {
-        direction = deltaY > 0 ? "down" : "up"
-        velocity = absY / (deltaTime / 1000)
+        direction = delta[1] > 0 ? "down" : "up"
       }
 
       if (direction && direction == this.direction) {
-        this.$emit("swiped", velocity)
+        let swipeEvt: SwipeEvent = {
+          time: this.time,
+          startTime: this.startTime,
+          direction,
+          momentum: vec2.scale(delta, delta, 1000 / deltaTime),
+        }
+        this.$emit("swiped", swipeEvt) // in px/s
       }
     },
     touchmove(e: TouchEvent) {
       if (this.isSwiped) return
       const touch = e.changedTouches[0]
-      this.x = (touch.clientX - this.startSwipe.x) * 0.55
-      this.y = (touch.clientY - this.startSwipe.y) * 0.55
+      this.pos = vec2.sub(
+        this.pos,
+        [touch.clientX, touch.clientY],
+        this.startSwipe.pos
+      )
+      this.pos = vec2.scale(vec2.create(), this.pos, 0.55)
+    },
+    tick(delta: number) {
+      let temp = vec2.create()
+
+      if (this.doesTick && !this.isSwiped) this.time -= delta
+      if (this.time < 0) this.$emit("timeout")
+
+      if (this.isSwiped) {
+        // if we've been swiped we just speed off in that direction
+        this.pos = vec2.scaleAndAdd(temp, this.pos, this.momentum, delta)
+      } else if (vec2.length(this.pos) && !this.isDragged) {
+        // if we've been moved but not fully swiped
+        // we move back to the center
+        if (vec2.length(this.pos) > delta * speed)
+          this.pos = vec2.scaleAndAdd(
+            temp,
+            this.pos,
+            vec2.normalize(temp, this.pos),
+            -delta * speed
+          )
+        else this.pos = vec2.set(temp, 0, 0)
+      }
+
+      if (this.isOutOfView) this.$emit("outofview")
     },
   },
   mounted() {
-    const self = this
-    let old = performance.now()
-    requestAnimationFrame(function raf(time) {
-      let x = self.x,
-        y = self.y,
-        delta = (time - old) / 1000,
-        moveDist = self.velocity * delta,
-        distance = Math.sqrt(x ** 2 + y ** 2)
-      old = time
-
-      if (self.doesTick && !self.isSwiped) self.time -= delta
-      if (self.time < 0) self.$emit("timeout")
-
-      if (self.isSwiped) {
-        // if we've been swiped we just speed off in that direction
-        switch (self.direction) {
-          case "up":
-            self.y -= moveDist
-            break
-          case "down":
-            self.y += moveDist
-            break
-          case "left":
-            self.x -= moveDist
-            break
-          case "right":
-            self.x += moveDist
-            break
-        }
-      } else if (x && y && !self.isDragged) {
-        // if we've been moved but not fully swiped
-        // we move back to the center
-        if (distance > moveDist) {
-          self.x -= (x / distance) * moveDist
-          self.y -= (y / distance) * moveDist
-        } else {
-          self.x = self.y = 0
-        }
-      }
-
-      if (self.isOutOfView) self.$emit("outofview")
-      if (!self.isDestroyed) requestAnimationFrame(raf)
-    })
-
-    this.$on("swiped", (velocity: number) => {
+    this.$on("swiped", (e: SwipeEvent) => {
       this.isSwiped = true
-      this.velocity = velocity
+      this.momentum = e.momentum
     })
-
-    this.$once("timeout", () => (this.isDestroyed = true))
-    this.$once("outofview", () => (this.isDestroyed = true))
-  },
-  destroyed() {
-    this.isDestroyed = true
   },
 })
 </script>

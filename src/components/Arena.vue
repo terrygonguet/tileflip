@@ -6,18 +6,19 @@
       :does-tick="square.doesTick"
       :direction="square.direction"
       :start-time="square.startTime"
-      @swiped="swiped(id)"
+      @swiped="swiped(id, $event)"
       @outofview="clear(id)"
       @timeout="timeout(id)"
+      ref="squares"
     ></Square>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue"
-import Square from "./Square.vue"
+import Square, { SwipeEvent } from "./Square.vue"
 
-type Square = {
+type SquareData = {
   direction: string
   startTime: number
   doesTick: boolean
@@ -30,10 +31,16 @@ export default Vue.extend({
   },
   data() {
     return {
-      squares: {} as { [id: string]: Square },
+      squares: {} as { [id: string]: SquareData },
       id: 0,
-      startTime: 5,
+      raf: 0,
+      oldTime: 0,
     }
+  },
+  computed: {
+    startTime(): number {
+      return 1 + 4 * 0.95 ** this.id
+    },
   },
   methods: {
     makeSquare() {
@@ -45,21 +52,30 @@ export default Vue.extend({
         doesTick: true,
       })
     },
-    swiped(id: string) {
-      this.$emit("score", 100)
+    swiped(id: string, e: SwipeEvent) {
+      this.$emit("score", 100 * (e.time / e.startTime) * (1 + this.id / 25))
       this.makeSquare()
-      this.startTime *= 0.95
     },
     clear(id: string) {
       this.$delete(this.squares, id)
     },
     start() {
-      this.startTime = 5
+      this.id = 0
       this.makeSquare()
+      this.oldTime = performance.now()
+      this.raf = requestAnimationFrame(this.tick)
     },
     timeout(id: string) {
       this.clear(id)
+      cancelAnimationFrame(this.raf)
       this.$emit("gameover")
+    },
+    tick(time: number) {
+      const delta = (time - this.oldTime) / 1000 // in seconds
+      this.oldTime = time
+      const squares = <any[]>this.$refs.squares // TODO: no any
+      squares.forEach(s => s.tick(delta))
+      this.raf = requestAnimationFrame(this.tick)
     },
   },
   mounted() {

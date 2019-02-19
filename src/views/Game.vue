@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col items-center justify-between">
-    <h1>Score: {{ score }}</h1>
+    <h1>Score: {{ score | round }}</h1>
     <h1 v-if="gameover">GAME OVER</h1>
     <button
       class="text-black rounded px-4 py-2"
@@ -32,6 +32,14 @@ export default Vue.extend({
       this.gameover = false
       const arena = this.$refs.arena as Vue
       arena.$emit("start")
+    },
+  },
+  filters: {
+    round(value: any) {
+      if (!value) return 0
+      let num = parseFloat(value)
+      if (isNaN(num)) return 0
+      else return Math.round(num)
     },
   },
 })
