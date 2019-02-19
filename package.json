@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@types/screenfull": "^3.3.2",
     "register-service-worker": "^1.5.2",
+    "screenfull": "^4.0.0",
     "vue": "^2.5.22",
     "vue-router": "^3.0.1"
   },
@@ -22,6 +24,7 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
+    "tailwindcss": "^0.7.4",
     "typescript": "~3.2.2",
     "vue-template-compiler": "^2.5.21"
   },
@@ -35,19 +38,27 @@
       "@vue/prettier",
       "@vue/typescript"
     ],
-    "rules": {},
+    "rules": {
+      "no-console": "off"
+    },
     "parserOptions": {
       "parser": "@typescript-eslint/parser"
     }
   },
   "postcss": {
     "plugins": {
-      "autoprefixer": {}
+      "autoprefixer": {},
+      "tailwindcss": "./tailwind.js"
     }
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
-    "not ie <= 8"
-  ]
+    "not ie <= 11"
+  ],
+  "prettier": {
+    "htmlWhitespaceSensitivity": "strict",
+    "semi": false,
+    "trailingComma": "es5"
+  }
 }
