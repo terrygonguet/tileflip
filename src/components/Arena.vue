@@ -6,17 +6,18 @@
       v-if="hasToast"
       class="absolute pin-t text-center p-8 text-2xl font-bold w-full neon"
     >{{ toast.message }}</Toast>
-    <TapSquare
+    <component
       v-for="(square, id) in squares"
+      :is="square.type"
       :key="id"
       :does-tick="square.doesTick"
       :direction="square.direction"
       :start-time="square.startTime"
-      @swiped="swiped(id, $event)"
+      @swipe="swipe(id, $event)"
       @outofview="clear(id)"
       @timeout="timeout(id)"
       ref="squares"
-    ></TapSquare>
+    ></component>
     <slot></slot>
   </div>
 </template>
@@ -25,12 +26,32 @@
 import Vue from "vue"
 import Square, { SwipeEvent } from "./Square.vue"
 import TapSquare from "./TapSquare.vue"
+import Triangle from "./Triangle.vue"
 import Toast from "./Toast.vue"
 
 type SquareData = {
-  direction: string
+  direction: Direction
   startTime: number
   doesTick: boolean
+  type: string
+}
+
+export type Direction = "up" | "down" | "left" | "right"
+
+function randomDirection(): Direction {
+  return (["up", "down", "left", "right"] as Direction[])[
+    Math.floor(Math.random() * 4)
+  ]
+}
+
+function randomWeighted(weights: { [type: string]: number }): string {
+  let bag: string[] = []
+  for (const type in weights) {
+    let weight = weights[type]
+    // add 'papers' to the bag
+    bag = bag.concat(new Array(weight).fill(type))
+  }
+  return bag[Math.floor(Math.random() * bag.length)]
 }
 
 export type ScoreEvent = {
@@ -44,10 +65,19 @@ export default Vue.extend({
   components: {
     Square,
     TapSquare,
+    Triangle,
     Toast,
   },
   data() {
     return {
+      types: {
+        Square: 5,
+        TapSquare: 2,
+        Triangle: 1,
+      } as {
+        // type: weight
+        [type: string]: number
+      },
       squares: {} as { [id: string]: SquareData },
       id: 0,
       raf: 0,
@@ -70,15 +100,16 @@ export default Vue.extend({
   },
   methods: {
     makeSquare() {
+      let direction: Direction = randomDirection()
+      let type = randomWeighted(this.types)
       this.$set(this.squares, this.id++, {
-        direction: ["up", "down", "left", "right"][
-          Math.floor(Math.random() * 4)
-        ],
+        direction,
+        type,
         startTime: this.startTime,
         doesTick: true,
-      })
+      } as SquareData)
     },
-    swiped(id: string, e: SwipeEvent) {
+    swipe(id: string, e: SwipeEvent) {
       if (e.correct) {
         let scoreEvt: ScoreEvent = {
           n: parseInt(id),

@@ -15,17 +15,18 @@
 
 <script lang="ts">
 import Vue from "vue"
+import { Direction } from "./Arena.vue"
 import { vec2 } from "gl-matrix"
 
-const threshold = 50
-const maxDuration = 300
-const speed = 750
+export let threshold = 50
+export let maxDuration = 300
+export let speed = 750
 
 export type SwipeEvent = {
   time: number
   startTime: number
   momentum: vec2
-  direction: string
+  direction: Direction
   correct: boolean
 }
 
@@ -98,23 +99,22 @@ export default Vue.extend({
       this.startSwipe = { time: 0, pos: vec2.create() }
       if (deltaTime > maxDuration) return
 
-      // figure out which direction we swiped
-      let direction = ""
-      if (absX > threshold && absX > absY) {
-        direction = delta[0] > 0 ? "right" : "left"
-      } else if (absY > threshold && absX < absY) {
-        direction = delta[1] > 0 ? "down" : "up"
+      let swipeEvt: SwipeEvent = {
+        time: this.time,
+        startTime: this.startTime,
+        direction: "up",
+        momentum: vec2.scale(delta, delta, 1000 / deltaTime), // in px/s
+        correct: false,
       }
-
-      if (direction) {
-        let swipeEvt: SwipeEvent = {
-          time: this.time,
-          startTime: this.startTime,
-          direction,
-          momentum: vec2.scale(delta, delta, 1000 / deltaTime), // in px/s
-          correct: direction == this.direction,
+      // figure out which direction we swiped
+      if (absX > threshold || absY > threshold) {
+        if (absX > absY) {
+          swipeEvt.direction = delta[0] > 0 ? "right" : "left"
+        } else {
+          swipeEvt.direction = delta[1] > 0 ? "down" : "up"
         }
-        this.$emit("swiped", swipeEvt)
+        swipeEvt.correct = swipeEvt.direction === this.direction
+        this.$emit("swipe", swipeEvt)
       }
     },
     touchmove(e: TouchEvent | MouseEvent) {
@@ -153,7 +153,7 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.$on("swiped", (e: SwipeEvent) => {
+    this.$on("swipe", (e: SwipeEvent) => {
       this.isSwiped = true
       this.momentum = e.momentum
     })
