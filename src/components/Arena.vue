@@ -27,6 +27,7 @@ import Vue from "vue"
 import Square, { SwipeEvent } from "./Square.vue"
 import TapSquare from "./TapSquare.vue"
 import Triangle from "./Triangle.vue"
+import Milligon from "./Milligon.vue"
 import Toast from "./Toast.vue"
 
 type SquareData = {
@@ -66,6 +67,7 @@ export default Vue.extend({
     Square,
     TapSquare,
     Triangle,
+    Milligon,
     Toast,
   },
   data() {
@@ -73,6 +75,7 @@ export default Vue.extend({
       types: {
         Square: 5,
         TapSquare: 2,
+        Milligon: 2,
         Triangle: 1,
       } as {
         // type: weight

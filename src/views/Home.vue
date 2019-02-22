@@ -1,5 +1,5 @@
 <template>
-  <div class="home flex flex-col items-center justify-center px-10 text-justify">
+  <div class="home flex flex-col items-center justify-center px-10 text-justify overflow-auto">
     <p class="m-2">
       This game is meant to be played in Portrait (vertical) mode on a
       smartphone.
@@ -12,6 +12,7 @@
       <li>Colored squares ⬜ must be swiped in the direction of their color</li>
       <li>Grey squares ⬜️ must be tapped first</li>
       <li>Triangles 🔺 act like boomerangs and must be swiped opposite their colors</li>
+      <li>Circles 🔴 must be swiped anywhere but the direction of their color</li>
       <li>You lose a life 🧡 for every mistake you make and if you don't react in time</li>
       <li>The more swipes you get right the higher your combo multiplier</li>
     </ul>
