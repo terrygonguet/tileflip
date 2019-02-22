@@ -5,6 +5,9 @@
     @touchstart="touchstart"
     @touchmove="touchmove"
     @touchend="touchend"
+    @mousedown="touchstart"
+    @mousemove="touchmove"
+    @mouseup="touchend"
   >
     <div class="square rounded" :style="squareStyle"></div>
   </div>
@@ -23,6 +26,7 @@ export type SwipeEvent = {
   startTime: number
   momentum: vec2
   direction: string
+  correct: boolean
 }
 
 export default Vue.extend({
@@ -67,9 +71,9 @@ export default Vue.extend({
     },
   },
   methods: {
-    touchstart(e: TouchEvent) {
+    touchstart(e: TouchEvent | MouseEvent) {
       if (this.isSwiped) return
-      const touch = e.changedTouches[0]
+      const touch = e instanceof MouseEvent ? e : e.changedTouches[0]
       this.startSwipe.time = Date.now()
       this.startSwipe.pos = vec2.set(
         this.startSwipe.pos,
@@ -77,9 +81,9 @@ export default Vue.extend({
         touch.clientY
       )
     },
-    touchend(e: TouchEvent) {
+    touchend(e: TouchEvent | MouseEvent) {
       if (this.isSwiped) return
-      const touch = e.changedTouches[0]
+      const touch = e instanceof MouseEvent ? e : e.changedTouches[0]
       const deltaTime = Date.now() - this.startSwipe.time
       const delta = vec2.sub(
         vec2.create(),
@@ -102,19 +106,20 @@ export default Vue.extend({
         direction = delta[1] > 0 ? "down" : "up"
       }
 
-      if (direction && direction == this.direction) {
+      if (direction) {
         let swipeEvt: SwipeEvent = {
           time: this.time,
           startTime: this.startTime,
           direction,
-          momentum: vec2.scale(delta, delta, 1000 / deltaTime),
+          momentum: vec2.scale(delta, delta, 1000 / deltaTime), // in px/s
+          correct: direction == this.direction,
         }
-        this.$emit("swiped", swipeEvt) // in px/s
+        this.$emit("swiped", swipeEvt)
       }
     },
-    touchmove(e: TouchEvent) {
-      if (this.isSwiped) return
-      const touch = e.changedTouches[0]
+    touchmove(e: TouchEvent | MouseEvent) {
+      if (this.isSwiped || !this.startSwipe.time) return
+      const touch = e instanceof MouseEvent ? e : e.changedTouches[0]
       this.pos = vec2.sub(
         this.pos,
         [touch.clientX, touch.clientY],
@@ -155,3 +160,20 @@ export default Vue.extend({
   },
 })
 </script>
+
+<style lang="postcss">
+.square {
+  animation: appear 0.1s linear;
+}
+
+@keyframes appear {
+  from {
+    width: 0;
+    height: 0;
+  }
+  to {
+    width: 35vw;
+    height: 35vw;
+  }
+}
+</style>
