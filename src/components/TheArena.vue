@@ -1,5 +1,5 @@
 <template>
-  <div id="arena" class="overflow-hidden relative">
+  <div id="arena" class="overflow-hidden relative" @touchmove.prevent>
     <Toast
       :duration="toast.duration"
       @done="toastDone"
