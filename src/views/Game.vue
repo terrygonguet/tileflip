@@ -1,6 +1,9 @@
 <template>
   <div class="game flex flex-col items-center justify-between select-none">
-    <h1 class="neon">Score: {{ score | round }}</h1>
+    <div class="p-2 text-center">
+      <router-link to="/" class="no-underline color-up font-bold">Home</router-link>
+      <h1 class="neon m-4">Score: {{ score | round }}</h1>
+    </div>
     <div>
       <p v-if="started" class="float-left text-2xl p-2 font-bold neon">COMBO X{{ combo }}</p>
       <p class="float-right text-2xl p-2">{{ "🧡".repeat(lives) }}</p>

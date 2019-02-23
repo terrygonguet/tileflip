@@ -1,11 +1,6 @@
 <template>
   <div id="app" class="bg-black h-screen overflow-hidden">
-    <div id="nav" class="flex items-center justify-center p-2">
-      <router-link to="/" class="no-underline color-down">Home</router-link>
-      <span>&nbsp;|&nbsp;</span>
-      <router-link to="/game" class="no-underline color-down">Game</router-link>
-    </div>
-    <router-view></router-view>
+    <router-view class="h-full"></router-view>
   </div>
 </template>
 
@@ -22,6 +17,7 @@
   --bg-button: cyan;
   --color-button: black;
   --color: #eee;
+  color: var(--color);
 }
 
 .select-none {
@@ -34,18 +30,6 @@
 
 .neon {
   text-shadow: 0 0 7px var(--color-down);
-}
-
-.router-link-exact-active {
-  color: var(--color-up) !important;
-  font-weight: bold;
-}
-
-#app {
-  display: grid;
-  color: var(--color);
-  grid-template-columns: auto;
-  grid-template-rows: auto 1fr;
 }
 
 .color-up {

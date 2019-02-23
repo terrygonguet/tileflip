@@ -1,12 +1,14 @@
 <template>
-  <div class="home flex flex-col items-center justify-center px-10 text-justify overflow-auto">
+  <div
+    class="home flex flex-col items-center justify-center px-8 text-justify overflow-auto leading-tight"
+  >
     <p class="m-2">
       This game is meant to be played in Portrait (vertical) mode on a
       smartphone.
     </p>
     <p class="m-2">
-      If the view "slides around" when you try to swipe, try going fullscreen.
-      If you're using an iPhone tough luck, I can't help you...
+      If the view "slides around" when you swipe, try going fullscreen.
+      If you're using an iPhone you'll have to install the web app on your home screen to play adequately.
     </p>
     <ul class="m-2 p-0 pl-2">
       <li>Colored squares ⬜ must be swiped in the direction of their color</li>
@@ -16,11 +18,14 @@
       <li>You lose a life 🧡 for every mistake you make and if you don't react in time</li>
       <li>The more swipes you get right the higher your combo multiplier</li>
     </ul>
-    <button
-      class="px-4 py-2 m-2 color-button rounded bg-button"
-      v-if="canFullscreen"
-      @click="fullscreen"
-    >Fullscreen</button>
+    <div>
+      <button
+        class="px-4 py-2 m-2 color-button rounded bg-button"
+        v-if="canFullscreen"
+        @click="fullscreen"
+      >Fullscreen</button>
+      <router-link to="/game" class="no-underline px-4 py-2 m-2 color-button rounded bg-button">Play</router-link>
+    </div>
   </div>
 </template>
 
