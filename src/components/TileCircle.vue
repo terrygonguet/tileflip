@@ -14,12 +14,16 @@
 </template>
 
 <script lang="ts">
-// It's called a Milligon because Circle is reserved HTML
-import Square, { threshold, maxDuration, speed, SwipeEvent } from "./Square.vue"
+import TileSquare, {
+  threshold,
+  maxDuration,
+  speed,
+  SwipeEvent,
+} from "./TileSquare.vue"
 import { vec2 } from "gl-matrix"
 
-export default Square.extend({
-  name: "milligon",
+export default TileSquare.extend({
+  name: "TileCircle",
   methods: {
     // TODO: not copy paste parent code
     touchend(e: TouchEvent | MouseEvent) {

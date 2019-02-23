@@ -24,10 +24,10 @@
 
 <script lang="ts">
 import Vue from "vue"
-import Square, { SwipeEvent } from "./Square.vue"
-import TapSquare from "./TapSquare.vue"
-import Triangle from "./Triangle.vue"
-import Milligon from "./Milligon.vue"
+import TileSquare, { SwipeEvent } from "./TileSquare.vue"
+import TileTapSquare from "./TileTapSquare.vue"
+import TileTriangle from "./TileTriangle.vue"
+import TileCircle from "./TileCircle.vue"
 import Toast from "./Toast.vue"
 
 type SquareData = {
@@ -62,21 +62,21 @@ export type ScoreEvent = {
 }
 
 export default Vue.extend({
-  name: "arena",
+  name: "TheArena",
   components: {
-    Square,
-    TapSquare,
-    Triangle,
-    Milligon,
+    TileSquare,
+    TileTapSquare,
+    TileTriangle,
+    TileCircle,
     Toast,
   },
   data() {
     return {
       types: {
-        Square: 5,
-        TapSquare: 2,
-        Milligon: 2,
-        Triangle: 1,
+        TileSquare: 5,
+        TileTapSquare: 2,
+        TileCircle: 2,
+        TileTriangle: 1,
       } as {
         // type: weight
         [type: string]: number

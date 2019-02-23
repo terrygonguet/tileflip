@@ -16,10 +16,10 @@
 
 <script lang="ts">
 import Vue from "vue"
-import Square from "./Square.vue"
+import TileSquare from "./TileSquare.vue"
 import { vec2 } from "gl-matrix"
 
-export default Square.extend({
+export default TileSquare.extend({
   name: "tapSquare",
   data() {
     return {

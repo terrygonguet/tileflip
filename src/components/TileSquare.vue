@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import Vue from "vue"
-import { Direction } from "./Arena.vue"
+import { Direction } from "./TheArena.vue"
 import { vec2 } from "gl-matrix"
 
 export let threshold = 50

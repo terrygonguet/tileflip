@@ -7,7 +7,7 @@
     <div>
       <p v-if="started" class="float-left text-2xl p-2 font-bold neon">COMBO X{{ combo }}</p>
       <p class="float-right text-2xl p-2">{{ "🧡".repeat(lives) }}</p>
-      <Arena @score="scorePoints" @mistake="mistake" ref="arena">
+      <TheArena @score="scorePoints" @mistake="mistake" ref="arena">
         <div class="pin m-auto absolute flex justify-center items-center" v-if="!started">
           <button
             class="rounded px-4 py-2 color-button bg-button font-bold text-xl"
@@ -21,23 +21,16 @@
           :class="toastSize"
           v-if="hasToast"
         >{{ toast.message }}</Toast>
-      </Arena>
+      </TheArena>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue"
-import Arena, { ScoreEvent } from "../components/Arena.vue"
+import TheArena, { ScoreEvent } from "../components/TheArena.vue"
 import Toast from "../components/Toast.vue"
-import screenfull from "screenfull"
-declare var process: any, installPrompt: any
-
-if (screenfull) {
-  screenfull.on("error", console.error)
-} else {
-  console.error("Fullscreen unavailable")
-}
+declare var installPrompt: any
 
 export default Vue.extend({
   name: "game",
@@ -56,7 +49,7 @@ export default Vue.extend({
     }
   },
   components: {
-    Arena,
+    TheArena,
     Toast,
   },
   computed: {
@@ -78,14 +71,6 @@ export default Vue.extend({
       this.gameover = false
       this.started = true
       this.lives = 3
-
-      if (
-        screenfull &&
-        screenfull.enabled &&
-        process.env.NODE_ENV !== "development"
-      ) {
-        screenfull.request()
-      }
 
       const arena = this.$refs.arena as any
       arena.start()

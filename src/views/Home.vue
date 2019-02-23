@@ -2,11 +2,11 @@
   <div
     class="home flex flex-col items-center justify-center px-8 text-justify overflow-auto leading-tight"
   >
-    <p class="m-2">
+    <p class="m-2" v-if="!standalone">
       This game is meant to be played in Portrait (vertical) mode on a
       smartphone.
     </p>
-    <p class="m-2">
+    <p class="m-2" v-if="!standalone">
       If the view "slides around" when you swipe, try going fullscreen.
       If you're using an iPhone you'll have to install the web app on your home screen to play adequately.
     </p>
@@ -42,6 +42,7 @@ export default Vue.extend({
   data() {
     return {
       canFullscreen: screenfull && screenfull.enabled,
+      standalone: window.matchMedia("(display-mode: standalone)").matches,
     }
   },
   methods: {

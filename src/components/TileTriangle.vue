@@ -17,8 +17,13 @@
 
 <script lang="ts">
 import Vue from "vue"
-import Square, { SwipeEvent, threshold, maxDuration, speed } from "./Square.vue"
-import { Direction } from "./Arena.vue"
+import TileSquare, {
+  SwipeEvent,
+  threshold,
+  maxDuration,
+  speed,
+} from "./TileSquare.vue"
+import { Direction } from "./TheArena.vue"
 import { vec2 } from "gl-matrix"
 
 const vmin = Math.min(innerHeight, innerWidth)
@@ -35,7 +40,7 @@ function oppositeDirection(dir: Direction): Direction {
   }
 }
 
-export default Square.extend({
+export default TileSquare.extend({
   name: "triangle",
   data() {
     return {
@@ -127,7 +132,7 @@ export default Square.extend({
       if (this.isSwiped)
         this.rotation += delta * 2
         // super.tick(delta)
-      ;(Square as any).options.methods.tick.call(this, delta)
+      ;(TileSquare as any).options.methods.tick.call(this, delta)
     },
   },
 })
