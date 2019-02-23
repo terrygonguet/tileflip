@@ -9,7 +9,11 @@
     @mousemove="touchmove"
     @mouseup="touchend"
   >
-    <svg :width="squareStyle.width" :height="squareStyle.height" class="triangle">
+    <svg
+      :width="squareStyle.width"
+      :height="squareStyle.height"
+      class="triangle"
+    >
       <polygon :fill="`var(--color-${direction})`" :points="points"></polygon>
     </svg>
   </div>

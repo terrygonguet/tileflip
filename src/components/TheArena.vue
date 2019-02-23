@@ -5,7 +5,8 @@
       @done="toastDone"
       v-if="hasToast"
       class="absolute pin-t text-center p-8 text-2xl font-bold w-full neon"
-    >{{ toast.message }}</Toast>
+      >{{ toast.message }}</Toast
+    >
     <component
       v-for="(square, id) in squares"
       :is="square.type"

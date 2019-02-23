@@ -42,7 +42,8 @@
       "@vue/typescript"
     ],
     "rules": {
-      "no-console": "off"
+      "no-console": "off",
+      "no-empty": "off"
     },
     "parserOptions": {
       "parser": "@typescript-eslint/parser"
@@ -63,5 +64,23 @@
     "htmlWhitespaceSensitivity": "strict",
     "semi": false,
     "trailingComma": "es5"
+  },
+  "vue": {
+    "pwa": {
+      "workboxOptions": {
+        "importWorkboxFrom": "local"
+      },
+      "name": "Tileflip",
+      "themeColor": "magenta",
+      "msTileColor": "#111111",
+      "appleMobileWebAppCapable": "yes",
+      "appleMobileWebAppStatusBarStyle": "magenta",
+      "iconPaths": {
+        "favicon32": "img/icons/favicon-32x32.png",
+        "favicon16": "img/icons/favicon-16x16.png",
+        "appleTouchIcon": "img/icons/apple-icon-152x152.png",
+        "msTileImage": "img/icons/ms-icon-144x144.png"
+      }
+    }
   }
 }

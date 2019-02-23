@@ -32,32 +32,8 @@
   text-shadow: 0 0 7px var(--color-down);
 }
 
-.color-up {
-  color: var(--color-up);
-}
-.color-down {
-  color: var(--color-down);
-}
-.color-left {
-  color: var(--color-left);
-}
-.color-right {
-  color: var(--color-right);
-}
-.color-button {
+.text-button {
   color: var(--color-button);
-}
-.bg-up {
-  background-color: var(--color-up);
-}
-.bg-down {
-  background-color: var(--color-down);
-}
-.bg-left {
-  background-color: var(--color-left);
-}
-.bg-right {
-  background-color: var(--color-right);
 }
 .bg-button {
   background-color: var(--bg-button);

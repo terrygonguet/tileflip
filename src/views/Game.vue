@@ -1,18 +1,26 @@
 <template>
   <div class="game flex flex-col items-center justify-between select-none">
     <div class="p-2 text-center">
-      <router-link to="/" class="no-underline color-up font-bold">Home</router-link>
+      <router-link to="/" class="no-underline text-up font-bold"
+        >Home</router-link
+      >
       <h1 class="neon m-4">Score: {{ score | round }}</h1>
     </div>
     <div>
-      <p v-if="started" class="float-left text-2xl p-2 font-bold neon">COMBO X{{ combo }}</p>
+      <p v-if="started" class="float-left text-2xl p-2 font-bold neon"
+        >COMBO X{{ combo }}</p
+      >
       <p class="float-right text-2xl p-2">{{ "🧡".repeat(lives) }}</p>
       <TheArena @score="scorePoints" @mistake="mistake" ref="arena">
-        <div class="pin m-auto absolute flex justify-center items-center" v-if="!started">
+        <div
+          class="pin m-auto absolute flex justify-center items-center"
+          v-if="!started"
+        >
           <button
-            class="rounded px-4 py-2 color-button bg-button font-bold text-xl"
+            class="rounded px-4 py-2 text-button bg-button font-bold text-xl"
             @click="start"
-          >Start</button>
+            >Start</button
+          >
         </div>
         <Toast
           :duration="toast.duration"
@@ -20,7 +28,8 @@
           class="pin absolute font-bold flex justify-center items-center neon"
           :class="toastSize"
           v-if="hasToast"
-        >{{ toast.message }}</Toast>
+          >{{ toast.message }}</Toast
+        >
       </TheArena>
     </div>
   </div>
@@ -101,7 +110,7 @@ export default Vue.extend({
         size: 3,
       }
 
-      if (installPrompt) {
+      try {
         installPrompt.prompt()
         installPrompt.userChoice
           .then((install: boolean) => {
@@ -109,7 +118,7 @@ export default Vue.extend({
             installPrompt = null
           })
           .catch(console.error)
-      }
+      } catch (e) {}
     },
     toastDone() {
       this.toast = { message: "", duration: 0, size: 0 }

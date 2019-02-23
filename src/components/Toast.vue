@@ -1,5 +1,5 @@
 <template>
-  <div :style="{opacity}" class="no-pointer-event">
+  <div :style="{ opacity }" class="no-pointer-event">
     <slot></slot>
   </div>
 </template>
