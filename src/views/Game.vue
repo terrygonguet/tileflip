@@ -28,7 +28,7 @@ import Vue from "vue"
 import Arena, { ScoreEvent } from "../components/Arena.vue"
 import Toast from "../components/Toast.vue"
 import screenfull from "screenfull"
-declare var process: any
+declare var process: any, installPrompt: any
 
 if (screenfull) {
   screenfull.on("error", console.error)
@@ -111,6 +111,16 @@ export default Vue.extend({
         message: "GAME OVER",
         duration: 1,
         size: 3,
+      }
+
+      if (installPrompt) {
+        installPrompt.prompt()
+        installPrompt.userChoice
+          .then((install: boolean) => {
+            console.log("Installed to home screen: " + install)
+            installPrompt = null
+          })
+          .catch(console.error)
       }
     },
     toastDone() {
