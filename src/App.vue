@@ -6,8 +6,7 @@
       v-if="hasToast"
       class="pin absolute font-bold flex justify-center items-center neon"
       @done="toastDone"
-      >{{ toast.message }}</Toast
-    >
+    >{{ toast.message }}</Toast>
   </div>
 </template>
 
@@ -41,8 +40,17 @@ export default Vue.extend({
   },
   mounted() {
     this.$parent.$on("toast", (e: ToastData | string) => {
-      if (typeof e === "string") this.toast.message = e
-      else this.toast = e
+      let toast: ToastData = { message: "" }
+      if (typeof e === "string") toast.message = e
+      else toast = e
+
+      // If there's already a toast we clear first
+      if (this.hasToast) {
+        this.toast = { message: "" }
+        this.$nextTick(() => {
+          this.toast = toast
+        })
+      } else this.toast = toast
     })
   },
 })

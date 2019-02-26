@@ -18,14 +18,20 @@
 <script lang="ts">
 import Vue from "vue"
 import { vec2, vec3 } from "gl-matrix"
-import { Direction } from "@/components/TheArena.vue"
-import { SwipeEvent } from "@/components/TileSquare.vue"
+import { Direction, SwipeEvent } from "@/tools"
 
 export default Vue.extend({
   name: "TileLosange",
   props: {
-    doesTick: Boolean,
-    startTime: Number,
+    doesTick: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    startTime: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {

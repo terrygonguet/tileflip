@@ -10,7 +10,7 @@ export default {
   install(Vue: typeof _Vue) {
     Vue.mixin({
       methods: {
-        $getInstallPrompt() {
+        getInstallPrompt() {
           let p = installPrompt
           installPrompt = null
           return p

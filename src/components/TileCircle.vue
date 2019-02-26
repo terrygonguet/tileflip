@@ -11,13 +11,9 @@
 </template>
 
 <script lang="ts">
-import TileSquare, {
-  threshold,
-  maxDuration,
-  speed,
-  SwipeEvent,
-} from "./TileSquare.vue"
+import TileSquare from "./TileSquare.vue"
 import { vec2 } from "gl-matrix"
+import { SwipeEvent, threshold, maxDuration, speed } from "@/tools"
 
 export default TileSquare.extend({
   name: "TileCircle",

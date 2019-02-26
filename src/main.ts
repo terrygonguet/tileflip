@@ -3,11 +3,13 @@ import App from "./App.vue"
 import router from "./router"
 import "./registerServiceWorker"
 import InstallPrompt from "./plugins/installPrompt"
-import detectMobile from "./plugins/detectMobile"
+import DetectMobile from "./plugins/detectMobile"
+import LevelManager from "./plugins/levelManager"
 
 Vue.config.productionTip = false
 Vue.use(InstallPrompt)
-Vue.use(detectMobile)
+Vue.use(DetectMobile)
+Vue.use(LevelManager)
 
 new Vue({
   router,

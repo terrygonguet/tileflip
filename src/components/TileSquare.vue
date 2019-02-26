@@ -12,27 +12,33 @@
 
 <script lang="ts">
 import Vue from "vue"
-import { Direction } from "./TheArena.vue"
+import {
+  Direction,
+  randomDirection,
+  SwipeEvent,
+  threshold,
+  maxDuration,
+  speed,
+} from "@/tools"
 import { vec2 } from "gl-matrix"
-
-export let threshold = 50
-export let maxDuration = 300
-export let speed = 750
-
-export type SwipeEvent = {
-  time: number
-  startTime: number
-  momentum: vec2
-  direction: Direction
-  correct: boolean
-}
 
 export default Vue.extend({
   name: "square",
   props: {
-    doesTick: Boolean,
-    startTime: Number,
-    direction: String,
+    doesTick: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    startTime: {
+      type: Number,
+      required: true,
+    },
+    direction: {
+      type: String,
+      required: false,
+      default: () => randomDirection(),
+    },
   },
   data() {
     return {

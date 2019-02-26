@@ -6,11 +6,7 @@
     @touchmove="touchmove"
     @touchend="touchend"
   >
-    <svg
-      :width="squareStyle.width"
-      :height="squareStyle.height"
-      class="triangle"
-    >
+    <svg :width="squareStyle.width" :height="squareStyle.height" class="triangle">
       <polygon :fill="`var(--color-${direction})`" :points="points"></polygon>
     </svg>
   </div>
@@ -18,28 +14,18 @@
 
 <script lang="ts">
 import Vue from "vue"
-import TileSquare, {
+import TileSquare from "./TileSquare.vue"
+import {
+  Direction,
+  oppositeDirection,
   SwipeEvent,
   threshold,
   maxDuration,
   speed,
-} from "./TileSquare.vue"
-import { Direction } from "./TheArena.vue"
+} from "@/tools"
 import { vec2 } from "gl-matrix"
 
 const vmin = Math.min(innerHeight, innerWidth)
-function oppositeDirection(dir: Direction): Direction {
-  switch (dir) {
-    case "up":
-      return "down"
-    case "down":
-      return "up"
-    case "left":
-      return "right"
-    case "right":
-      return "left"
-  }
-}
 
 export default TileSquare.extend({
   name: "triangle",

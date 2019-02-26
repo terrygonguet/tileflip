@@ -1,9 +1,7 @@
 <template>
   <div class="game flex flex-col items-center justify-between select-none">
     <div class="p-2 text-center">
-      <router-link to="/" class="no-underline text-up font-bold"
-        >Home</router-link
-      >
+      <router-link to="/" class="no-underline text-up font-bold">Home</router-link>
       <h1 class="neon m-4">Score: {{ score | round }}</h1>
     </div>
     <div>
@@ -11,14 +9,9 @@
         <span class="text-2xl font-bold neon">X{{ combo }}</span>
         <span class="text-2xl">{{ "🧡".repeat(lives) }}</span>
       </div>
-      <TheArena @score="scorePoints" @mistake="mistake" ref="arena">
-        <div
-          class="pin absolute flex justify-center items-center"
-          v-if="!started"
-        >
-          <button class="btn m-2 font-bold text-2xl" @click="start"
-            >Start</button
-          >
+      <TheArena @score="scorePoints" @mistake="mistake" @gameover="endgame" ref="arena">
+        <div class="pin absolute flex justify-center items-center" v-if="!started">
+          <button class="btn m-2 font-bold text-2xl" @click="start">Start</button>
         </div>
       </TheArena>
     </div>
@@ -27,7 +20,8 @@
 
 <script lang="ts">
 import Vue from "vue"
-import TheArena, { ScoreEvent } from "../components/TheArena.vue"
+import TheArena from "../components/TheArena.vue"
+import { ScoreEvent } from "@/tools"
 
 export default Vue.extend({
   name: "game",
@@ -58,8 +52,6 @@ export default Vue.extend({
 
       const arena = this.$refs.arena as any
       arena.start()
-
-      this.$root.$emit("toast", "Let's Go!")
     },
     scorePoints(e: ScoreEvent) {
       this.chain++
@@ -88,7 +80,7 @@ export default Vue.extend({
       })
 
       try {
-        let installPrompt = this.$getInstallPrompt()
+        let installPrompt = this.getInstallPrompt()
         installPrompt.prompt()
         installPrompt.userChoice
           .then((install: boolean) => {
