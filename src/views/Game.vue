@@ -7,29 +7,19 @@
       <h1 class="neon m-4">Score: {{ score | round }}</h1>
     </div>
     <div>
-      <p v-if="started" class="float-left text-2xl p-2 font-bold neon"
-        >COMBO X{{ combo }}</p
-      >
-      <p class="float-right text-2xl p-2">{{ "🧡".repeat(lives) }}</p>
+      <div v-if="started" class="p-2 flex justify-between">
+        <span class="text-2xl font-bold neon">X{{ combo }}</span>
+        <span class="text-2xl">{{ "🧡".repeat(lives) }}</span>
+      </div>
       <TheArena @score="scorePoints" @mistake="mistake" ref="arena">
         <div
-          class="pin m-auto absolute flex justify-center items-center"
+          class="pin absolute flex justify-center items-center"
           v-if="!started"
         >
-          <button
-            class="rounded px-4 py-2 text-button bg-button font-bold text-xl"
-            @click="start"
+          <button class="btn m-2 font-bold text-2xl" @click="start"
             >Start</button
           >
         </div>
-        <Toast
-          :duration="toast.duration"
-          @done="toastDone"
-          class="pin absolute font-bold flex justify-center items-center neon"
-          :class="toastSize"
-          v-if="hasToast"
-          >{{ toast.message }}</Toast
-        >
       </TheArena>
     </div>
   </div>
@@ -38,8 +28,6 @@
 <script lang="ts">
 import Vue from "vue"
 import TheArena, { ScoreEvent } from "../components/TheArena.vue"
-import Toast from "../components/Toast.vue"
-declare var installPrompt: any
 
 export default Vue.extend({
   name: "game",
@@ -50,25 +38,12 @@ export default Vue.extend({
       gameover: false,
       started: false,
       lives: 3,
-      toast: {
-        message: "",
-        duration: 0,
-        size: 0,
-      },
     }
   },
   components: {
     TheArena,
-    Toast,
   },
   computed: {
-    hasToast(): boolean {
-      return !!(this.toast.message && this.toast.duration)
-    },
-    toastSize() {
-      let size: number = this.toast.size
-      return "text-" + (size > 1 ? size + "xl" : "xl")
-    },
     combo(): number {
       return Math.floor(this.chain / 8) + 1
     },
@@ -83,6 +58,8 @@ export default Vue.extend({
 
       const arena = this.$refs.arena as any
       arena.start()
+
+      this.$root.$emit("toast", "Let's Go!")
     },
     scorePoints(e: ScoreEvent) {
       this.chain++
@@ -104,33 +81,30 @@ export default Vue.extend({
     endgame() {
       this.gameover = true
       this.started = false
-      this.toast = {
+      this.$root.$emit("toast", {
         message: "GAME OVER",
         duration: 1,
         size: 3,
-      }
+      })
 
       try {
+        let installPrompt = this.$getInstallPrompt()
         installPrompt.prompt()
         installPrompt.userChoice
           .then((install: boolean) => {
             console.log("Installed to home screen: " + install)
-            installPrompt = null
           })
           .catch(console.error)
       } catch (e) {}
     },
-    toastDone() {
-      this.toast = { message: "", duration: 0, size: 0 }
-    },
   },
   watch: {
     combo(val, old) {
-      this.toast = {
-        message: val > old ? "COMBO UP" : "COMBO RESET",
+      this.$root.$emit("toast", {
+        message: val > old ? "COMBO X" + val : "COMBO RESET",
         duration: 0.7,
         size: 1,
-      }
+      })
     },
   },
   filters: {

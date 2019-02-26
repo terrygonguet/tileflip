@@ -1,12 +1,5 @@
 <template>
   <div id="arena" class="overflow-hidden relative" @touchmove.prevent>
-    <Toast
-      :duration="toast.duration"
-      @done="toastDone"
-      v-if="hasToast"
-      class="absolute pin-t text-center p-8 text-2xl font-bold w-full neon"
-      >{{ toast.message }}</Toast
-    >
     <component
       v-for="(square, id) in squares"
       :is="square.type"
@@ -29,7 +22,7 @@ import TileSquare, { SwipeEvent } from "./TileSquare.vue"
 import TileTapSquare from "./TileTapSquare.vue"
 import TileTriangle from "./TileTriangle.vue"
 import TileCircle from "./TileCircle.vue"
-import Toast from "./Toast.vue"
+import TileLosange from "./TileLosange.vue"
 
 type SquareData = {
   direction: Direction
@@ -69,15 +62,16 @@ export default Vue.extend({
     TileTapSquare,
     TileTriangle,
     TileCircle,
-    Toast,
+    TileLosange,
   },
   data() {
     return {
       types: {
-        TileSquare: 5,
-        TileTapSquare: 2,
-        TileCircle: 2,
-        TileTriangle: 1,
+        // TileSquare: 5,
+        // TileTapSquare: 2,
+        // TileCircle: 2,
+        // TileTriangle: 2,
+        TileLosange: 1,
       } as {
         // type: weight
         [type: string]: number
@@ -88,18 +82,11 @@ export default Vue.extend({
       oldTime: 0,
       playing: false,
       speed: 0,
-      toast: {
-        message: "",
-        duration: 0,
-      },
     }
   },
   computed: {
     startTime(): number {
       return 0.7 + 4.3 * 0.9 ** this.speed
-    },
-    hasToast(): boolean {
-      return !!(this.toast.message && this.toast.duration)
     },
   },
   methods: {
@@ -154,13 +141,7 @@ export default Vue.extend({
     },
     speedUp() {
       this.speed++
-      this.toast = {
-        message: "SPEED UP",
-        duration: 1.5,
-      }
-    },
-    toastDone() {
-      this.toast = { duration: 0, message: "" }
+      this.$root.$emit("toast", "SPEED UP")
     },
     tick(time: number) {
       const delta = (time - this.oldTime) / 1000 // in seconds

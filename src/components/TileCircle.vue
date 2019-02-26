@@ -5,9 +5,6 @@
     @touchstart="touchstart"
     @touchmove="touchmove"
     @touchend="touchend"
-    @mousedown="touchstart"
-    @mousemove="touchmove"
-    @mouseup="touchend"
   >
     <div class="circle rounded-full" :style="squareStyle"></div>
   </div>
@@ -26,9 +23,9 @@ export default TileSquare.extend({
   name: "TileCircle",
   methods: {
     // TODO: not copy paste parent code
-    touchend(e: TouchEvent | MouseEvent) {
+    touchend(e: TouchEvent) {
       if (this.isSwiped) return
-      const touch = e instanceof MouseEvent ? e : e.changedTouches[0]
+      const touch = e.changedTouches[0]
       const deltaTime = Date.now() - this.startSwipe.time
       const delta = vec2.sub(
         vec2.create(),

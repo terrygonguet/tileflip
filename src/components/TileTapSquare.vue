@@ -5,10 +5,7 @@
     @click="tap"
     @touchstart="touchstart"
     @touchmove="touchmove"
-    @touchend="_touchend"
-    @mousedown="touchstart"
-    @mousemove="touchmove"
-    @mouseup="_touchend"
+    @touchend="touchend"
   >
     <div class="square rounded" :style="squareStyle"></div>
   </div>
@@ -41,8 +38,9 @@ export default TileSquare.extend({
     tap(e: MouseEvent) {
       this.tapped = true
     },
-    _touchend(e: TouchEvent | MouseEvent) {
-      if (this.tapped) this.touchend(e)
+    touchend(e: TouchEvent) {
+      if (this.tapped)
+        (TileSquare as any).options.methods.touchend.call(this, e)
       else this.startSwipe = { time: 0, pos: vec2.create() }
     },
   },

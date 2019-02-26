@@ -5,9 +5,6 @@
     @touchstart="touchstart"
     @touchmove="touchmove"
     @touchend="touchend"
-    @mousedown="touchstart"
-    @mousemove="touchmove"
-    @mouseup="touchend"
   >
     <svg
       :width="squareStyle.width"
@@ -56,7 +53,8 @@ export default TileSquare.extend({
     points(): string {
       const side = 0.35 * vmin
       const center = vec2.fromValues(side / 2, (side * Math.sqrt(3)) / 3)
-      const points = [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3]
+      const angles = [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3]
+      const points = angles
         .map(angle =>
           vec2.rotate(
             vec2.create(),
@@ -69,7 +67,7 @@ export default TileSquare.extend({
       return points.join(" ")
     },
     squareStyle(): object {
-      const side = 0.35 * vmin
+      const side = 0.35 * vmin // a bit more for no clipping
       return {
         width: side,
         height: (side * Math.sqrt(3)) / 2,
@@ -87,9 +85,9 @@ export default TileSquare.extend({
   },
   methods: {
     // TODO: not copy paste the parent's code...
-    touchend(e: TouchEvent | MouseEvent) {
+    touchend(e: TouchEvent) {
       if (this.isSwiped) return
-      const touch = e instanceof MouseEvent ? e : e.changedTouches[0]
+      const touch = e.changedTouches[0]
       const deltaTime = Date.now() - this.startSwipe.time
       const delta = vec2.sub(
         vec2.create(),

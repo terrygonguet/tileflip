@@ -5,9 +5,6 @@
     @touchstart="touchstart"
     @touchmove="touchmove"
     @touchend="touchend"
-    @mousedown="touchstart"
-    @mousemove="touchmove"
-    @mouseup="touchend"
   >
     <div class="square rounded" :style="squareStyle"></div>
   </div>
@@ -72,9 +69,9 @@ export default Vue.extend({
     },
   },
   methods: {
-    touchstart(e: TouchEvent | MouseEvent) {
+    touchstart(e: TouchEvent) {
       if (this.isSwiped) return
-      const touch = e instanceof MouseEvent ? e : e.changedTouches[0]
+      const touch = e.changedTouches[0]
       this.startSwipe.time = Date.now()
       this.startSwipe.pos = vec2.set(
         this.startSwipe.pos,
@@ -82,9 +79,9 @@ export default Vue.extend({
         touch.clientY
       )
     },
-    touchend(e: TouchEvent | MouseEvent) {
+    touchend(e: TouchEvent) {
       if (this.isSwiped) return
-      const touch = e instanceof MouseEvent ? e : e.changedTouches[0]
+      const touch = e.changedTouches[0]
       const deltaTime = Date.now() - this.startSwipe.time
       const delta = vec2.sub(
         vec2.create(),
@@ -117,9 +114,9 @@ export default Vue.extend({
         this.$emit("swipe", swipeEvt)
       }
     },
-    touchmove(e: TouchEvent | MouseEvent) {
+    touchmove(e: TouchEvent) {
       if (this.isSwiped || !this.startSwipe.time) return
-      const touch = e instanceof MouseEvent ? e : e.changedTouches[0]
+      const touch = e.changedTouches[0]
       this.pos = vec2.sub(
         this.pos,
         [touch.clientX, touch.clientY],

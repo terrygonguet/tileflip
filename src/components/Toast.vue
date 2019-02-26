@@ -1,5 +1,8 @@
 <template>
-  <div :style="{ opacity }" class="no-pointer-event">
+  <div
+    :style="style"
+    class="no-pointer-event overflow-hidden whitespace-no-wrap"
+  >
     <slot></slot>
   </div>
 </template>
@@ -9,16 +12,33 @@ import Vue from "vue"
 export default Vue.extend({
   name: "toast",
   props: {
-    duration: Number,
+    duration: {
+      type: Number,
+      default: 0.5,
+      required: false,
+    },
+
+    size: {
+      type: Number,
+      default: 2,
+      required: false,
+    },
   },
   data() {
     return {
       time: this.duration,
+      curSize: this.size,
     }
   },
   computed: {
-    opacity(): number {
+    progress(): number {
       return (this.time / this.duration) ** 0.2
+    },
+    style(): object {
+      return {
+        opacity: this.progress,
+        fontSize: (1 / this.progress) * this.curSize + "em",
+      }
     },
   },
   mounted() {
