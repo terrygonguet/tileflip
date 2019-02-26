@@ -1,7 +1,7 @@
 <template>
   <div class="game flex flex-col items-center justify-between select-none">
     <div class="p-2 text-center">
-      <router-link to="/" class="no-underline text-up font-bold">Home</router-link>
+      <a class="no-underline text-up font-bold" @click="$router.go(-1)">Back</a>
       <h1 class="neon m-4">Score: {{ score | round }}</h1>
     </div>
     <div>
@@ -22,9 +22,13 @@
 import Vue from "vue"
 import TheArena from "../components/TheArena.vue"
 import { ScoreEvent } from "@/tools"
+import levelManager from "@/plugins/levelManager"
 
 export default Vue.extend({
   name: "game",
+  props: {
+    level: String,
+  },
   data() {
     return {
       score: 0,
@@ -49,6 +53,7 @@ export default Vue.extend({
       this.gameover = false
       this.started = true
       this.lives = 3
+      this.levelManager.setLevel(this.level)
 
       const arena = this.$refs.arena as any
       arena.start()

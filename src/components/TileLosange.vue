@@ -104,10 +104,8 @@ export default Vue.extend({
       this.$emit("swipe", swipeEvt)
     },
     tick(delta: number) {
-      if (this.doesTick) {
-        if (!this.tapped) this.time -= delta
-        else this.spread += delta * 500
-      }
+      if (!this.tapped && this.doesTick) this.time -= delta
+      if (this.tapped) this.spread += delta * 500
       if (this.time < 0) this.$emit("timeout")
       if (this.spread > 1000) this.$emit("outofview")
     },

@@ -57,6 +57,7 @@ export default Vue.extend({
             break
           case "NextLevel":
             manager.setLevel(action.name, action.resetSpeed)
+            this.$router.replace("/game/" + action.name)
             break
           case "GameOver":
             this.stop()
@@ -89,7 +90,6 @@ export default Vue.extend({
       this.oldTime = performance.now()
       this.raf = requestAnimationFrame(this.tick)
       this.playing = true
-      this.levelManager.setLevel("tuto-1")
       this.next()
     },
     stop() {
