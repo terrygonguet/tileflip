@@ -1,3 +1,4 @@
+/* eslint no-useless-escape: 0 */
 import _Vue, { PluginObject } from "vue"
 
 export default {
