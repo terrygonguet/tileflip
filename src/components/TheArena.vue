@@ -67,10 +67,10 @@ export default Vue.extend({
   data() {
     return {
       types: {
-        // TileSquare: 5,
-        // TileTapSquare: 2,
-        // TileCircle: 2,
-        // TileTriangle: 2,
+        TileSquare: 5,
+        TileTapSquare: 2,
+        TileCircle: 2,
+        TileTriangle: 2,
         TileLosange: 1,
       } as {
         // type: weight

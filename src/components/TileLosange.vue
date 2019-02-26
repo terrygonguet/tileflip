@@ -7,27 +7,11 @@
     @touchend="touchend"
     @click="tap"
   >
-    <div class="square rounded" v-if="!tapped"></div>
-    <div
-      v-if="tapped"
-      class="squarebit bg-up rounded-full absolute"
-      :style="bitStyle('up')"
-    ></div>
-    <div
-      v-if="tapped"
-      class="squarebit bg-down rounded-full absolute"
-      :style="bitStyle('down')"
-    ></div>
-    <div
-      v-if="tapped"
-      class="squarebit bg-left rounded-full absolute"
-      :style="bitStyle('left')"
-    ></div>
-    <div
-      v-if="tapped"
-      class="squarebit bg-right rounded-full absolute"
-      :style="bitStyle('right')"
-    ></div>
+    <div class="losange rounded" v-if="!tapped"></div>
+    <div v-if="tapped" class="losangebit bg-up rounded absolute" :style="bitStyle('up')"></div>
+    <div v-if="tapped" class="losangebit bg-down rounded absolute" :style="bitStyle('down')"></div>
+    <div v-if="tapped" class="losangebit bg-left rounded absolute" :style="bitStyle('left')"></div>
+    <div v-if="tapped" class="losangebit bg-right rounded absolute" :style="bitStyle('right')"></div>
   </div>
 </template>
 
@@ -102,13 +86,14 @@ export default Vue.extend({
     },
     tap(e: MouseEvent) {
       this.tapped = true
+      let mod =
+        (this.startRotation + this.rotation + Math.PI / 4) % (Math.PI * 2)
       let swipeEvt: SwipeEvent = {
         time: this.time,
         startTime: this.startTime,
         direction: "up", // dummy values
         momentum: vec2.create(), // dummy values
-        correct:
-          (this.startRotation + this.rotation) % (Math.PI * 2) <= Math.PI / 2,
+        correct: Math.abs(mod) <= Math.PI / 2,
       }
       this.$emit("swipe", swipeEvt)
     },
@@ -133,7 +118,7 @@ export default Vue.extend({
 </script>
 
 <style lang="postcss">
-.square {
+.losange {
   border-width: 17.5vmin;
   border-top-color: var(--color-up);
   border-bottom-color: var(--color-down);
@@ -141,7 +126,7 @@ export default Vue.extend({
   border-right-color: var(--color-right);
 }
 
-.squarebit {
+.losangebit {
   width: 17.5vmin;
   height: 17.5vmin;
 }

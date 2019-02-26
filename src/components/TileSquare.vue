@@ -159,18 +159,16 @@ export default Vue.extend({
 </script>
 
 <style lang="postcss">
-.square {
+.hitbox > :first-child {
   animation: appear 0.1s linear;
 }
 
 @keyframes appear {
   from {
-    width: 0;
-    height: 0;
+    transform: scale(0);
   }
   to {
-    width: 35vw;
-    height: 35vw;
+    transform: scale(1);
   }
 }
 </style>
