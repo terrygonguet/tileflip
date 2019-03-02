@@ -9,30 +9,30 @@
       <button
         class="btn m-2"
         @click="$router.push('/game/tuto-1')"
-        v-if="levelManager.isUnlocked('tuto-1')"
+        v-if="levelManager.isLevelUnlocked('tuto-1')"
       >1 - Square</button>
       <button
         class="btn m-2"
         @click="$router.push('/game/tuto-2')"
-        v-if="levelManager.isUnlocked('tuto-2')"
+        v-if="levelManager.isLevelUnlocked('tuto-2')"
       >2 - Tap Square</button>
       <button
         class="btn m-2"
         @click="$router.push('/game/tuto-3')"
-        v-if="levelManager.isUnlocked('tuto-3')"
+        v-if="levelManager.isLevelUnlocked('tuto-3')"
       >3 - Circle</button>
       <button
         class="btn m-2"
         @click="$router.push('/game/tuto-4')"
-        v-if="levelManager.isUnlocked('tuto-4')"
+        v-if="levelManager.isLevelUnlocked('tuto-4')"
       >4 - Triangle</button>
       <button
         class="btn m-2"
         @click="$router.push('/game/tuto-5')"
-        v-if="levelManager.isUnlocked('tuto-5')"
+        v-if="levelManager.isLevelUnlocked('tuto-5')"
       >5 - Losange</button>
     </div>
-    <div v-if="levelManager.isUnlocked('tuto-5')" class="freeplay text-center m-4">
+    <div v-if="levelManager.isLevelUnlocked('tuto-5')" class="freeplay text-center m-4">
       <h2 class="neon-glow text-3xl">Freeplay</h2>
       <button class="btn m-2" @click="$router.push('/game/freeplay')">Play</button>
     </div>

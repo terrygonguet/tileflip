@@ -1,7 +1,11 @@
 import { LevelManager } from "@/plugins/levelManager"
 
 export default function(manager: LevelManager) {
+  manager.statsEnabled = false
   manager
+    .insertNoStatsMessage(
+      "Swipe triangles the opposite direction to their color"
+    )
     .insertToast("Swipe left!", 2)
     .insertTile("TileTriangle", undefined, false, "right")
     .insertToast("Swipe up!", 2)
@@ -10,7 +14,8 @@ export default function(manager: LevelManager) {
     .insertTile("TileTriangle", undefined, false, "left")
     .insertToast("Swipe down!", 2)
     .insertTile("TileTriangle", undefined, false, "up")
-  for (let i = 0; i < 20; i++) {
+    .insertNoStatsMessage("")
+  for (let i = 0; i < 15; i++) {
     manager.insertTile({
       TileSquare: 3,
       TileTapSquare: 1,

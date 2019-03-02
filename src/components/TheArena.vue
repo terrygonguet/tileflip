@@ -1,5 +1,5 @@
 <template>
-  <div id="arena" class="overflow-hidden relative" @touchmove.prevent>
+  <div id="arena" class="overflow-hidden relative bg-black" @touchmove.prevent>
     <component
       v-for="(tile, id) in tiles"
       :is="tile.tileName"
@@ -56,12 +56,14 @@ export default Vue.extend({
             this.$root.$emit("toast", action)
             break
           case "NextLevel":
-            manager.setLevel(action.name, action.resetSpeed)
+            manager.setLevel(action.name, action.resetStats)
             this.$router.replace("/game/" + action.name)
             break
           case "GameOver":
             this.stop()
-            this.$emit("gameover")
+            break
+          case "NoStatsMessage":
+            this.levelManager.noStatsMessage = action.message
             break
           default:
             throw "Wat"
@@ -76,9 +78,12 @@ export default Vue.extend({
           startTime: e.startTime,
           time: e.time,
         }
+        this.levelManager.scorePoints(scoreEvt)
         this.$emit("score", scoreEvt)
       } else {
+        this.levelManager.mistake()
         this.$emit("mistake")
+        if (this.levelManager.isGameOver) this.stop()
       }
       this.playing && this.next()
     },
@@ -97,11 +102,14 @@ export default Vue.extend({
       for (const id in this.tiles) {
         this.clear(id)
       }
+      this.$emit("gameover")
       this.playing = false
     },
     timeout(id: string) {
       this.clear(id)
+      this.levelManager.mistake()
       this.$emit("mistake")
+      if (this.levelManager.isGameOver) this.stop()
       this.playing && this.next()
     },
     tick(time: number) {

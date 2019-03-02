@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="bg-black h-screen overflow-hidden">
+  <div id="app" class="bg-brick h-screen overflow-hidden">
     <FPSCounter v-if="isDebug" class="absolute m-2 pin-t pin-l"/>
     <router-view class="h-full"></router-view>
     <Toast
@@ -76,6 +76,11 @@ export default Vue.extend({
   font-size: 1.2rem;
 }
 
+.bg-brick {
+  background-image: url("./assets/bg.jpg");
+  background-size: cover;
+}
+
 .select-none {
   user-select: none;
 }
@@ -100,6 +105,7 @@ export default Vue.extend({
   @apply py-2;
   @apply text-button;
   @apply rounded;
+  @apply bg-black;
   border: 2px solid var(--color-down);
   box-shadow: 3px 2px var(--color-up);
 }

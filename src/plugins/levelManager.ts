@@ -1,25 +1,26 @@
 import _Vue, { PluginObject } from "vue"
-import { Action, Direction, Weights, randomWeighted } from "@/tools"
+import { Action, Direction, Weights, randomWeighted, ScoreEvent } from "@/tools"
 
 export class LevelManager {
-  actions: Action[]
+  actions: Action[] = []
   generator?: (arg: LevelManager) => Action
-  mode: "list" | "function"
-  i: number
-  speed: number
+  mode: "list" | "function" = "list"
+  i: number = 0
+  speed: number = 0
   unlocked: string[]
+  score: number = 0
+  chain: number = 0
+  lives: number = 3
+  statsEnabled: boolean = true
+  noStatsMessage: string = ""
 
   constructor() {
-    this.actions = []
-    this.i = 0
-    this.speed = 0
-    this.mode = "list"
     if (localStorage.unlocked) this.unlocked = localStorage.unlocked.split(",")
     else this.unlocked = ["tuto-1"]
   }
 
-  setLevel(value: string, resetSpeed = true) {
-    this.reset(resetSpeed)
+  setLevel(value: string, resetStats?: boolean) {
+    this.reset(resetStats)
     let lvl: Function = require(`../levels/${value}.ts`).default
     lvl(this)
     if (this.unlocked.indexOf(value) === -1) {
@@ -40,7 +41,7 @@ export class LevelManager {
     return this
   }
 
-  isUnlocked(level: string) {
+  isLevelUnlocked(level: string) {
     return this.unlocked.indexOf(level) !== -1
   }
 
@@ -50,11 +51,17 @@ export class LevelManager {
     return this
   }
 
-  reset(speed = true, mode = true) {
+  reset(stats = true) {
     this.i = 0
     this.actions = []
-    if (speed) this.speed = 0
-    if (mode) this.mode = "list"
+    if (stats) {
+      this.speed = 0
+      this.mode = "list"
+      this.score = 0
+      this.chain = 0
+      this.lives = 3
+      this.statsEnabled = true
+    }
   }
 
   insertToast(message: string, duration?: number, size?: number) {
@@ -87,11 +94,11 @@ export class LevelManager {
     return this
   }
 
-  insertNextLevel(name: string, resetSpeed?: boolean) {
+  insertNextLevel(name: string, resetStats?: boolean) {
     this.actions.push({
       type: "NextLevel",
       name,
-      resetSpeed,
+      resetStats,
     })
     return this
   }
@@ -101,12 +108,41 @@ export class LevelManager {
     return this
   }
 
+  insertNoStatsMessage(message = "") {
+    this.actions.push({
+      type: "NoStatsMessage",
+      message,
+    })
+    return this
+  }
+
+  scorePoints(e: ScoreEvent) {
+    if (!this.statsEnabled) return this
+    this.chain++
+    let timeToSwipe = e.startTime - e.time
+    this.score += 20 * (5 - timeToSwipe) * this.combo
+  }
+
+  mistake() {
+    if (!this.statsEnabled) return this
+    this.chain = 0
+    this.lives--
+  }
+
   get startTime() {
     return 0.7 + 4.3 * 0.9 ** this.speed
   }
 
   get isFinished() {
     return this.i >= this.actions.length && this.mode == "list"
+  }
+
+  get combo() {
+    return Math.floor(this.chain / 8) + 1
+  }
+
+  get isGameOver() {
+    return this.lives <= 0
   }
 
   nextAction() {

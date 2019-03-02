@@ -20,14 +20,19 @@ export type Toast = {
 export type NextLevel = {
   type: "NextLevel"
   name: string
-  resetSpeed?: boolean
+  resetStats?: boolean
 }
 
 export type GameOver = {
   type: "GameOver"
 }
 
-export type Action = Tile | Toast | NextLevel | GameOver
+export type NoStatsMessage = {
+  type: "NoStatsMessage"
+  message: string
+}
+
+export type Action = Tile | Toast | NextLevel | GameOver | NoStatsMessage
 
 export type SwipeEvent = {
   time: number
@@ -54,7 +59,7 @@ export let maxDuration = 300
 export let speed = 750
 
 export function isBlockingType(type: string) {
-  return type !== "Toast" && type !== "NextLevel"
+  return type === "GameOver" || type === "Tile"
 }
 
 export function randomDirection(): Direction {
