@@ -43,6 +43,12 @@ export type ScoreEvent = {
   time: number
 }
 
+export type ToastEvent = {
+  message: string
+  duration?: number
+  size?: number
+}
+
 export let threshold = 50
 export let maxDuration = 300
 export let speed = 750

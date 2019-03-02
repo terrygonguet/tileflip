@@ -1,8 +1,12 @@
 <template>
   <div class="game flex flex-col items-center justify-between select-none">
+    <ButtonFullScreen class="absolute m-4 pin-t pin-r"/>
     <div class="p-2 text-center">
       <a class="no-underline text-up font-bold" @click="$router.go(-1)">Back</a>
-      <h1 class="neon m-4">Score: {{ score | round }}</h1>
+      <h1 class="neon m-4">
+        <span class="neon-glow">Score:</span>
+        {{ score | round }}
+      </h1>
     </div>
     <div>
       <div v-if="started" class="p-2 flex justify-between">
@@ -20,7 +24,8 @@
 
 <script lang="ts">
 import Vue from "vue"
-import TheArena from "../components/TheArena.vue"
+import TheArena from "@/components/TheArena.vue"
+import ButtonFullScreen from "@/components/ButtonFullScreen.vue"
 import { ScoreEvent } from "@/tools"
 import levelManager from "@/plugins/levelManager"
 
@@ -40,6 +45,7 @@ export default Vue.extend({
   },
   components: {
     TheArena,
+    ButtonFullScreen,
   },
   computed: {
     combo(): number {

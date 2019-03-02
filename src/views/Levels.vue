@@ -5,7 +5,7 @@
       @click="$router.go(-1)"
     >Back</a>
     <div class="tutorials text-center m-4">
-      <h2 class="neon">Tutorials</h2>
+      <h2 class="neon-glow text-3xl">Tutorials</h2>
       <button
         class="btn m-2"
         @click="$router.push('/game/tuto-1')"
@@ -33,7 +33,7 @@
       >5 - Losange</button>
     </div>
     <div v-if="levelManager.isUnlocked('tuto-5')" class="freeplay text-center m-4">
-      <h2 class="neon">Freeplay</h2>
+      <h2 class="neon-glow text-3xl">Freeplay</h2>
       <button class="btn m-2" @click="$router.push('/game/freeplay')">Play</button>
     </div>
   </div>
