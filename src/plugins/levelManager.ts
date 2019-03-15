@@ -121,6 +121,7 @@ export class LevelManager {
     this.chain++
     let timeToSwipe = e.startTime - e.time
     this.score += 20 * (5 - timeToSwipe) * this.combo
+    return this
   }
 
   mistake() {

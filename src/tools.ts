@@ -1,4 +1,5 @@
 import { vec2 } from "gl-matrix"
+import { Point } from "pixi.js"
 
 export type Direction = "up" | "down" | "left" | "right"
 
@@ -56,7 +57,7 @@ export type ToastEvent = {
 
 export let threshold = 50
 export let maxDuration = 300
-export let speed = 750
+export let speed = 285
 
 export function isBlockingType(type: string) {
   return type === "GameOver" || type === "Tile"
@@ -66,6 +67,16 @@ export function randomDirection(): Direction {
   return (["up", "down", "left", "right"] as Direction[])[
     Math.floor(Math.random() * 4)
   ]
+}
+
+export const colors: {
+  [name: string]: number
+} = {
+  up: 0x00ffff,
+  down: 0xff00ff,
+  left: 0xffff00,
+  right: 0x77ff77,
+  locked: 0x888888,
 }
 
 export type Weights = { [type: string]: number }
@@ -90,4 +101,22 @@ export function oppositeDirection(dir: Direction): Direction {
     case "right":
       return "left"
   }
+}
+
+export function getSwipeDirection(swipe: vec2): Direction {
+  const absX = Math.abs(swipe[0])
+  const absY = Math.abs(swipe[1])
+  if (absX > absY) {
+    return swipe[0] > 0 ? "right" : "left"
+  } else {
+    return swipe[1] > 0 ? "down" : "up"
+  }
+}
+
+export function pixi2vec(point: Point): vec2 {
+  return vec2.fromValues(point.x, point.y)
+}
+
+export function vec2pixi(point: vec2): Point {
+  return new Point(point[0], point[1])
 }

@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="bg-brick h-screen overflow-hidden">
-    <FPSCounter v-if="isDebug" class="absolute m-2 pin-t pin-l"/>
+    <FPSCounter v-if="isDebug" class="absolute m-2 pin-t pin-l z-10"/>
     <router-view class="h-full"></router-view>
     <Toast
       :duration="toast.duration"

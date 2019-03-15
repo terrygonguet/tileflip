@@ -1,31 +1,17 @@
 <template>
-  <div class="game flex flex-col items-center justify-between select-none">
-    <ButtonFullScreen class="absolute m-4 pin-t pin-r"/>
-    <div class="p-2 text-center">
+  <div class="game select-none">
+    <ButtonFullScreen class="absolute m-4 pin-t pin-r z-20"/>
+    <div class="p-2 text-center absolute pin-t pin-x z-10">
       <a class="no-underline text-up font-bold" @click="$router.go(-1)">Back</a>
-      <LabelScore class="neon m-4"/>
+      <LabelScore class="neon"/>
     </div>
-    <div>
-      <div v-if="started" class="p-2 flex justify-between">
-        <LabelCombo class="text-2xl font-bold neon"/>
-        <LabelLives class="text-2xl"/>
-        <span
-          v-if="!levelManager.statsEnabled"
-          class="text-xl m-2 text-center"
-        >{{ levelManager.noStatsMessage }}</span>
-      </div>
-      <TheArena @mistake="mistake" @gameover="endgame" ref="arena">
-        <div class="pin absolute flex justify-center items-center" v-if="!started">
-          <button class="btn m-2 font-bold text-2xl" @click="start">Start</button>
-        </div>
-      </TheArena>
-    </div>
+    <TheArenaCanvas @mistake="mistake" ref="arena"/>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue"
-import TheArena from "@/components/TheArena.vue"
+import TheArenaCanvas from "@/components/TheArenaCanvas.vue"
 import ButtonFullScreen from "@/components/ButtonFullScreen.vue"
 import LabelScore from "@/components/LabelScore.vue"
 import LabelLives from "@/components/LabelLives.vue"
@@ -44,7 +30,7 @@ export default Vue.extend({
     }
   },
   components: {
-    TheArena,
+    TheArenaCanvas,
     ButtonFullScreen,
     LabelCombo,
     LabelLives,
