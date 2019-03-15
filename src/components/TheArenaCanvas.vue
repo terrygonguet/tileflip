@@ -17,6 +17,9 @@ export default Vue.extend({
     )
     console.log("game :", game)
   },
+  destroyed() {
+    game.destroy()
+  }
 })
 </script>
 

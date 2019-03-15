@@ -37,18 +37,11 @@ export default class extends Graphics {
     this.calculateControlPoints()
     this.clear()
 
-    let firstDir = "" // ew
     for (const direction in this.directions) {
       let data = this.directions[direction]
       this.lineStyle(this.thickness, colors[direction])
-      this.arc(0, 0, this.radius, data.start, data.end + 0.1) // eww
-      !firstDir && (firstDir = direction) // ewww
+      this.arc(0, 0, this.radius, data.start, data.end)
     }
-    // EWWW
-    // needed because of some weird arc artifacts
-    let data = this.directions[firstDir]
-    this.lineStyle(this.thickness, colors[firstDir])
-    this.arc(0, 0, this.radius, data.start, data.end)
 
     this.hitArea = new Circle(0, 0, this.radius)
   }

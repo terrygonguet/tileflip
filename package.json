@@ -13,7 +13,7 @@
     "@types/screenfull": "^3.3.2",
     "ajv": "^6.9.1",
     "gl-matrix": "^3.0.0",
-    "pixi.js": "^5.0.0-rc.2",
+    "pixi.js": "^4.8.6",
     "register-service-worker": "^1.5.2",
     "screenfull": "^4.0.0",
     "vue": "^2.5.22",

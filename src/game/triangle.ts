@@ -13,7 +13,7 @@ export default class Triangle extends Square {
   draw() {
     let vmin = Math.min(innerHeight, innerWidth)
     let w = 0.27 * vmin
-    this.beginFill(colors[this.direction]).drawStar(0, 0, 3, w / 1.5)
+    this.beginFill(colors[this.direction]).drawStar(0, 0, 3, w / 1.5, w / 3)
     this.hitArea = new Circle(0, 0, w / 1.5)
   }
 

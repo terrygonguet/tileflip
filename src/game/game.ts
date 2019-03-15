@@ -9,30 +9,48 @@ import { randomDirection, randomWeighted } from "@/tools"
 export default class extends Application {
   zone = new SwipeZone()
   events = new EventTarget() // to have an event interface
+  time = 0
+  resize: () => void
 
   constructor(el: HTMLCanvasElement) {
     super({
       view: el,
       transparent: true,
-      resizeTo: window,
       autoStart: true,
       antialias: true,
       forceFXAA: true,
     })
 
-    this.ticker.add(this.tick, this, UPDATE_PRIORITY.HIGH)
+    this.resize = () => {
+      this.renderer.resize(innerWidth, innerHeight)
+    }
+    window.addEventListener("fullscreenchange", this.resize)
+    window.addEventListener("resize", this.resize)
+    this.resize()
 
+    this.ticker.add(this.tick, this, UPDATE_PRIORITY.HIGH)
     this.stage.addChild(this.zone)
-    setInterval(this.addTile.bind(this), 1300)
   }
 
   tick(deltaTime: number) {
     if (this.ticker.elapsedMS > 200) return
-    let delta = this.ticker.deltaMS / 1000
+    let delta = this.ticker.elapsedMS / 1000
+
+    if ((this.time += delta) > 1.3) {
+      this.time = 0
+      this.addTile()
+    }
+
     this.stage.children.forEach(c => c.emit("tick", delta))
     this.stage.children.forEach(c => {
       if (c !== this.zone) this.zone.updateIntersection(c)
     })
+  }
+
+  destroy() {
+    window.removeEventListener("fullscreenchange", this.resize)
+    window.removeEventListener("resize", this.resize)
+    super.destroy()
   }
 
   addTile() {
