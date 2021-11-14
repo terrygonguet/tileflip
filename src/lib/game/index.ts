@@ -5,32 +5,24 @@ export function createGame(PIXI: typeof import("pixi.js"), options?: IApplicatio
 
 	const app = new PIXI.Application(options)
 	const { stage, renderer } = app
-	const IM = new PIXI.InteractionManager(renderer)
-	const indicators = new Map<number, DisplayObject>()
 
-	function createIndicator() {
-		const indicator = new PIXI.Graphics()
-		indicator.beginFill(0xee55).drawCircle(0, 0, 15)
-		stage.addChild(indicator)
-		indicator.position.set(-100, -100)
-		return indicator
-	}
-
-	IM.on("pointermove", (e: InteractionEvent) => {
-		const indicator = indicators.get(e.data.pointerId) ?? createIndicator()
-		e.data.global.copyTo(indicator.position)
-		indicators.set(e.data.pointerId, indicator)
-	})
-	IM.on("pointerup", (e: InteractionEvent) => {
-		const indicator = indicators.get(e.data.pointerId)
-		indicator?.destroy()
-		indicators.delete(e.data.pointerId)
-	})
+	const areaRadius = 0.35 * innerWidth
+	const areaLineWidth = 0.03 * innerWidth
+	const areaCenter = new PIXI.Point(0.5 * innerWidth, innerHeight - areaRadius - 50)
+	const wheel = new PIXI.Graphics()
+	wheel
+		.lineStyle(areaLineWidth, 0x834516)
+		.arc(0, 0, areaRadius, -Math.PI / 6, Math.PI / 2)
+		.lineStyle(areaLineWidth, 0x047756)
+		.arc(0, 0, areaRadius, Math.PI / 2, (-5 / 6) * Math.PI)
+		.lineStyle(areaLineWidth, 0xba1c1c)
+		.arc(0, 0, areaRadius, (-5 / 6) * Math.PI, -Math.PI / 6)
+	areaCenter.copyTo(wheel.position)
+	stage.addChild(wheel)
 
 	return {
 		destroy() {
 			app.destroy(false, true)
-			IM.destroy()
 		},
 	}
 }
