@@ -1,3 +1,11 @@
+<script context="module" lang="ts">
+	const padding = 4
+	const border = 3
+	const margin = 12
+	const content = 12
+	export const height = content + 2 * padding + 2 * border + 2 * margin
+</script>
+
 <script lang="ts">
 	export let current: number
 	export let maximum: number
@@ -21,17 +29,17 @@
 	$: empty = colors[role].empty
 </script>
 
-<div class="border-[3px] p-1 flex gap-1 m-3 overflow-hidden">
+<div class="border-[3px] border-white bg-black p-[4px] flex gap-[4px] m-[12px] overflow-hidden">
 	{#each Array(cur) as _}
 		<div
 			style="border-color:{full};background-color:{full}"
-			class="border-2 flex-1 h-3 transition-colors"
+			class="border-2 flex-1 h-[12px] transition-colors"
 		/>
 	{/each}
 	{#each Array(lost) as _}
 		<div
-			style="border-color:{empty};background-color:transparent"
-			class="border-2 flex-1 h-3 transition-colors"
+			style="border-color:{empty}"
+			class="border-2 bg-black flex-1 h-[12px] transition-colors"
 		/>
 	{/each}
 </div>
