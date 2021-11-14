@@ -1,43 +1,36 @@
-import { arrayWith } from "$lib/utils"
-import type { IApplicationOptions } from "pixi.js"
+import type { IApplicationOptions, InteractionEvent, DisplayObject } from "pixi.js"
 
 export function createGame(PIXI: typeof import("pixi.js"), options?: IApplicationOptions) {
 	PIXI.settings.ROUND_PIXELS = true
 
 	const app = new PIXI.Application(options)
-	const { stage, view } = app
+	const { stage, renderer } = app
+	const IM = new PIXI.InteractionManager(renderer)
+	const indicators = new Map<number, DisplayObject>()
 
-	const indicators = arrayWith(5, () => {
+	function createIndicator() {
 		const indicator = new PIXI.Graphics()
 		indicator.beginFill(0xee55).drawCircle(0, 0, 15)
 		stage.addChild(indicator)
 		indicator.position.set(-100, -100)
 		return indicator
+	}
+
+	IM.on("pointermove", (e: InteractionEvent) => {
+		const indicator = indicators.get(e.data.pointerId) ?? createIndicator()
+		e.data.global.copyTo(indicator.position)
+		indicators.set(e.data.pointerId, indicator)
 	})
-
-	function handleTouches(e: TouchEvent) {
-		Array.from(e.touches).forEach((touch, i) => {
-			const indicator = indicators[i]
-			indicator.visible = true
-			indicator.position.set(touch.clientX, touch.clientY)
-		})
-		indicators.slice(e.touches.length).forEach(indicator => (indicator.visible = false))
-	}
-
-	function handleEnd(e: TouchEvent) {
-		indicators.forEach(indicator => (indicator.visible = false))
-	}
-
-	view.addEventListener("touchstart", handleTouches)
-	view.addEventListener("touchmove", handleTouches)
-	view.addEventListener("touchend", handleEnd)
+	IM.on("pointerup", (e: InteractionEvent) => {
+		const indicator = indicators.get(e.data.pointerId)
+		indicator?.destroy()
+		indicators.delete(e.data.pointerId)
+	})
 
 	return {
 		destroy() {
 			app.destroy(false, true)
-			view.removeEventListener("touchstart", handleTouches)
-			view.removeEventListener("touchmove", handleTouches)
-			view.removeEventListener("touchend", handleEnd)
+			IM.destroy()
 		},
 	}
 }
